@@ -227,7 +227,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 	_updateStyles: function(feat, renderer, styleOptions) {
 		styleOptions = (styleOptions instanceof Function) ?
-			styleOptions(feat.properties, renderer.getCoord().z) :
+			styleOptions(feat.properties, renderer.getCoord().z, feat.type) :
 			styleOptions;
 
 		if (!(styleOptions instanceof Array)) {
