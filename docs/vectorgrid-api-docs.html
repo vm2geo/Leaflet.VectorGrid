@@ -386,33 +386,27 @@ Styling is done via per-layer² sets of <code>L.Path</code> options in the <code
             }
         },
         // A function for styling features dynamically, depending on their
-        // properties, the map&#39;s zoom level, and the layer's geometry
-        // dimension (point, line, polygon)
-        water: function(properties, zoom, geometryDimension) {
-	    if (geometryDimension === 1) {   // point
-	        return ({
+        // properties, the map&#39;s zoom level, and the layer's geometry type
+        // (point, line, polygon)
+        water: function(properties, zoom, type) {
+            return [
+                {   // point
                     radius: 5,
                     color: &#39;#cf52d3&#39;,
-                });
-	    }
-	    
-	    if (geometryDimension === 2) {   // line
-                 return ({
+                },
+                {   // line
                     weight: 1,
                     color: &#39;#cf52d3&#39;,
                     dashArray: &#39;2, 6&#39;,
                     fillOpacity: 0
-                });
-	    }
-	    
-	    if (geometryDimension === 3) {   // polygon
-	         return ({
+                },
+                {   // polygon
                     weight: 1,
                     fillColor: &#39;#9bc2c4&#39;,
                     fillOpacity: 1,
                     fill: true
-                });
-	    }
+                }
+            ]
         },
         // An &#39;icon&#39; option means that a L.Icon will be used
         place: {
