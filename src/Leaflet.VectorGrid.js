@@ -240,9 +240,9 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		for (var j = 0; j < styleOptions.length; j++) {
-            var styleOption = (styleOptions[j] instanceof Function) ?
-                styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
-                styleOptions[j];
+			var styleOption = (styleOptions[j] instanceof Function) ?
+				styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
+				styleOptions[j];
 			var style = L.extend({}, L.Path.prototype.options, styleOption);
 			feat.updateStyle(renderer, style);
 		}
