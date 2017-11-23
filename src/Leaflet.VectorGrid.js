@@ -98,6 +98,12 @@ L.VectorGrid = L.GridLayer.extend({
 							continue;
 						}
 
+						if (styleOptions[j] instanceof Function) {
+							var styleOption = styleOptions[j](feat.properties, coords.z, feat.type);
+						} else {
+							var styleOption = styleOptions[j];
+						}
+
 						var styleOptions = layerStyle;
 						if (storeFeatures) {
 							id = this.options.getFeatureId(feat);
@@ -235,7 +241,10 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		for (var j = 0; j < styleOptions.length; j++) {
-			var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
+            var styleOption = (styleOptions[j] instanceof Function) ?
+                styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
+                styleOptions[j];
+			var style = L.extend({}, L.Path.prototype.options, styleOption);
 			feat.updateStyle(renderer, style);
 		}
 	},
