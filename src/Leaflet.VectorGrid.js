@@ -109,11 +109,11 @@ L.VectorGrid = L.GridLayer.extend({
 					var featureLayer = this._createLayer(feat, pxPerExtent);
 
 					for (var j = 0; j < styleOptions.length; j++) {
-                        if (styleOptions[j] instanceof Function) {
-                            var styleOption = styleOptions[j](feat.properties, coords.z, feat.type);
-                        } else {
-                            var styleOption = styleOptions[j];
-                        }
+						if (styleOptions[j] instanceof Function) {
+							var styleOption = styleOptions[j](feat.properties, coords.z, feat.type);
+						} else {
+							var styleOption = styleOptions[j];
+						}
 						var style = L.extend({}, L.Path.prototype.options, styleOption);
 						featureLayer.render(renderer, style);
 						renderer._addPath(featureLayer);
@@ -201,9 +201,9 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		for (var j = 0; j < styleOptions.length; j++) {
-            var styleOption = (styleOptions[j] instanceof Function) ?
-                styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
-                styleOptions[j];
+			var styleOption = (styleOptions[j] instanceof Function) ?
+				styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
+				styleOptions[j];
 			var style = L.extend({}, L.Path.prototype.options, styleOption);
 			feat.updateStyle(renderer, style);
 		}
