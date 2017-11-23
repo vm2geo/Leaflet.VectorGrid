@@ -386,9 +386,9 @@ Styling is done via per-layer² sets of <code>L.Path</code> options in the <code
             }
         },
         // A function for styling features dynamically, depending on their
-        // properties, the map&#39;s zoom level, and the layer's geometry type
-        // (point, line, polygon)
-        water: function(properties, zoom, type) {
+        // properties, the map&#39;s zoom level, and the layer's geometry
+        // dimension (point, line, polygon)
+        water: function(properties, zoom, geometry_dimension) {
             return [
                 {   // point
                     radius: 5,
