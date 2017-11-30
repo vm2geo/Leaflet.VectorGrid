@@ -1,4 +1,4 @@
-import {} from './Leaflet.Renderer.SVG.Tile.js';
+import { } from './Leaflet.Renderer.SVG.Tile.js';
 import { PointSymbolizer } from './Symbolizer.Point.js';
 import { LineSymbolizer } from './Symbolizer.Line.js';
 import { FillSymbolizer } from './Symbolizer.Fill.js';
@@ -41,15 +41,15 @@ L.VectorGrid = L.GridLayer.extend({
 		// The default is to include all features. Similar to L.GeoJSON filter option.
 	},
 
-	initialize: function(options) {
+	initialize: function (options) {
 		L.setOptions(this, options);
 		L.GridLayer.prototype.initialize.apply(this, arguments);
 		if (this.options.getFeatureId) {
 			this._vectorTiles = {};
 			this._overriddenStyles = {};
-			this.on('tileunload', function(e) {
+			this.on('tileunload', function (e) {
 				var key = this._tileCoordsToKey(e.coords),
-				    tile = this._vectorTiles[key];
+					tile = this._vectorTiles[key];
 
 				if (tile && this._map) {
 					tile.removeFrom(this._map);
@@ -60,14 +60,14 @@ L.VectorGrid = L.GridLayer.extend({
 		this._dataLayerNames = {};
 	},
 
-	createTile: function(coords, done) {
+	createTile: function (coords, done) {
 
 		var storeFeatures = this.options.getFeatureId;
 
 		var tileSize = this.getTileSize();
 		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
 
-		var tileBounds = this._tileCoordsToBounds(coords);	
+		var tileBounds = this._tileCoordsToBounds(coords);
 
 		var vectorTilePromise = this._getVectorTilePromise(coords, tileBounds);
 
@@ -76,23 +76,23 @@ L.VectorGrid = L.GridLayer.extend({
 			renderer._features = {};
 		}
 
-		vectorTilePromise.then( function renderTile(vectorTile) {
+		vectorTilePromise.then(function renderTile(vectorTile) {
 
 			if (vectorTile.layers && vectorTile.layers.length !== 0) {
 
 				for (var layerName in vectorTile.layers) {
 					this._dataLayerNames[layerName] = true;
 					var layer = vectorTile.layers[layerName];
-	
+
 					var pxPerExtent = this.getTileSize().divideBy(layer.extent);
-	
-					var layerStyle = this.options.vectorTileLayerStyles[ layerName ] ||
-					L.Path.prototype.options;
-	
+
+					var layerStyle = this.options.vectorTileLayerStyles[layerName] ||
+						L.Path.prototype.options;
+
 					for (var i = 0; i < layer.features.length; i++) {
 						var feat = layer.features[i];
 						var id;
-	
+
 						if (this.options.filter instanceof Function &&
 							!this.options.filter(feat.properties, coords.z)) {
 							continue;
@@ -110,21 +110,21 @@ L.VectorGrid = L.GridLayer.extend({
 								}
 							}
 						}
-	
+
 						if (styleOptions instanceof Function) {
 							styleOptions = styleOptions(feat.properties, coords.z);
 						}
-	
+
 						if (!(styleOptions instanceof Array)) {
 							styleOptions = [styleOptions];
 						}
-	
+
 						if (!styleOptions.length) {
 							continue;
 						}
-	
+
 						var featureLayer = this._createLayer(feat, pxPerExtent);
-	
+
 						for (var j = 0; j < styleOptions.length; j++) {
 							if (styleOptions[j] instanceof Function) {
 								var styleOption = styleOptions[j](feat.properties, coords.z, feat.type);
@@ -135,33 +135,32 @@ L.VectorGrid = L.GridLayer.extend({
 							featureLayer.render(renderer, style);
 							renderer._addPath(featureLayer);
 						}
-	
-						if (this.options.interactive) {
-							featureLayer.makeInteractive();
-						}
-	
-						if (storeFeatures) {
-							// multiple features may share the same id, add them
-							// to an array of features
-							if (!renderer._features[id]) {
-								renderer._features[id] = [];
-							}
+					}
 
-							renderer._features[id].push({
-								layerName: layerName,
-								feature: featureLayer
-							});
+					if (this.options.interactive) {
+						featureLayer.makeInteractive();
+					}
+
+					if (storeFeatures) {
+						// multiple features may share the same id, add them
+						// to an array of features
+						if (!renderer._features[id]) {
+							renderer._features[id] = [];
 						}
 					}
-	
+
+					renderer._features[id].push({
+						layerName: layerName,
+						feature: featureLayer
+					});
 				}
-	
+
 			}
-		
+
 			if (this._map != null) {
 				renderer.addTo(this._map);
 			}
-	
+
 			L.Util.requestAnimFrame(done.bind(coords, null, null));
 
 		}.bind(this));
@@ -172,23 +171,23 @@ L.VectorGrid = L.GridLayer.extend({
 	// 🍂method setFeatureStyle(id: Number, layerStyle: L.Path Options): this
 	// Given the unique ID for a vector features (as per the `getFeatureId` option),
 	// re-symbolizes that feature across all tiles it appears in.
-	setFeatureStyle: function(id, layerStyle) {
+	setFeatureStyle: function (id, layerStyle) {
 		this._overriddenStyles[id] = layerStyle;
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
 			var features = tile._features[id];
 			if (features) {
-				for (var i=0; i<features.length; i++) {
-                    var feature = features[i];
+				for (var i = 0; i < features.length; i++) {
+					var feature = features[i];
 
-                    var styleOptions = layerStyle;
-                    if (layerStyle[feature.layerName]) {
-                        styleOptions = layerStyle[feature.layerName];
-                    }
+					var styleOptions = layerStyle;
+					if (layerStyle[feature.layerName]) {
+						styleOptions = layerStyle[feature.layerName];
+					}
 
-                    this._updateStyles(feature.feature, tile, styleOptions);
-                }
+					this._updateStyles(feature.feature, tile, styleOptions);
+				}
 			}
 		}
 		return this;
@@ -196,20 +195,20 @@ L.VectorGrid = L.GridLayer.extend({
 
 	// 🍂method setFeatureStyle(id: Number): this
 	// Reverts the effects of a previous `setFeatureStyle` call.
-	resetFeatureStyle: function(id) {
+	resetFeatureStyle: function (id) {
 		delete this._overriddenStyles[id];
 
 		for (var tileKey in this._vectorTiles) {
 			var tile = this._vectorTiles[tileKey];
 			var features = tile._features[id];
 			if (features) {
-				for (var i=0; i<features.length; i++) {
+				for (var i = 0; i < features.length; i++) {
 					var feature = features[i];
 
-                    var styleOptions = this.options.vectorTileLayerStyles[feature.layerName] ||
-                        L.Path.prototype.options;
-                    this._updateStyles(feature.feature, tile, styleOptions);
-                }
+					var styleOptions = this.options.vectorTileLayerStyles[feature.layerName] ||
+						L.Path.prototype.options;
+					this._updateStyles(feature.feature, tile, styleOptions);
+				}
 			}
 		}
 		return this;
@@ -226,11 +225,11 @@ L.VectorGrid = L.GridLayer.extend({
 	// 🍂method getDataLayerNames(): Array
 	// Returns an array of strings, with all the known names of data layers in
 	// the vector tiles displayed. Useful for introspection.
-	getDataLayerNames: function() {
+	getDataLayerNames: function () {
 		return Object.keys(this._dataLayerNames);
 	},
 
-	_updateStyles: function(feat, renderer, styleOptions) {
+	_updateStyles: function (feat, renderer, styleOptions) {
 		styleOptions = (styleOptions instanceof Function) ?
 			styleOptions(feat.properties, renderer.getCoord().z, feat.type) :
 			styleOptions;
@@ -240,28 +239,25 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		for (var j = 0; j < styleOptions.length; j++) {
-			var styleOption = (styleOptions[j] instanceof Function) ?
-				styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
-				styleOptions[j];
-			var style = L.extend({}, L.Path.prototype.options, styleOption);
+			var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 			feat.updateStyle(renderer, style);
 		}
 	},
 
-	_createLayer: function(feat, pxPerExtent, layerStyle) {
+	_createLayer: function (feat, pxPerExtent, layerStyle) {
 		var layer;
 		switch (feat.type) {
-		case 1:
-			layer = new PointSymbolizer(feat, pxPerExtent);
-			//prevent leaflet from treating these canvas points as real markers
-			layer.getLatLng = null;
-			break;
-		case 2:
-			layer = new LineSymbolizer(feat, pxPerExtent);
-			break;
-		case 3:
-			layer = new FillSymbolizer(feat, pxPerExtent);
-			break;
+			case 1:
+				layer = new PointSymbolizer(feat, pxPerExtent);
+				//prevent leaflet from treating these canvas points as real markers
+				layer.getLatLng = null;
+				break;
+			case 2:
+				layer = new LineSymbolizer(feat, pxPerExtent);
+				break;
+			case 3:
+				layer = new FillSymbolizer(feat, pxPerExtent);
+				break;
 		}
 
 		if (this.options.interactive) {
