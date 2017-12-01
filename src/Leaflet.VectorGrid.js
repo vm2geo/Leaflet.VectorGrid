@@ -126,13 +126,7 @@ L.VectorGrid = L.GridLayer.extend({
 						var featureLayer = this._createLayer(feat, pxPerExtent);
 	
 						for (var j = 0; j < styleOptions.length; j++) {
-							if (styleOptions[j] instanceof Function) {
-								var styleOption = styleOptions[j](feat.properties, coords.z, feat.type);
-							} else {
-								var styleOption = styleOptions[j];
-							}
-
-							var style = L.extend({}, L.Path.prototype.options, styleOption);
+							var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 							featureLayer.render(renderer, style);
 							renderer._addPath(featureLayer);
 						}
@@ -233,7 +227,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 	_updateStyles: function(feat, renderer, styleOptions) {
 		styleOptions = (styleOptions instanceof Function) ?
-			styleOptions(feat.properties, renderer.getCoord().z, feat.type) :
+			styleOptions(feat.properties, renderer.getCoord().z) :
 			styleOptions;
 
 		if (!(styleOptions instanceof Array)) {
@@ -241,10 +235,7 @@ L.VectorGrid = L.GridLayer.extend({
 		}
 
 		for (var j = 0; j < styleOptions.length; j++) {
-			var styleOption = (styleOptions[j] instanceof Function) ?
-				styleOptions[j](feat.properties, renderer.getCoord().z, feat.type) :
-				styleOptions[j];
-			var style = L.extend({}, L.Path.prototype.options, styleOption);
+			var style = L.extend({}, L.Path.prototype.options, styleOptions[j]);
 			feat.updateStyle(renderer, style);
 		}
 	},
