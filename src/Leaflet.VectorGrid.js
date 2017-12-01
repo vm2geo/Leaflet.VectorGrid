@@ -27,7 +27,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 		onEachFeature: null,
 
-        // 🍂option interactive: Boolean = false
+		// 🍂option interactive: Boolean = false
 		// Whether this `VectorGrid` fires `Interactive Layer` events.
 		interactive: false,
 
@@ -53,7 +53,7 @@ L.VectorGrid = L.GridLayer.extend({
 
 	createTile: function(coords, done) {
 		var storeFeatures = this.options.getFeatureId;
-        var onEachFeature = this.options.onEachFeature;
+		var onEachFeature = this.options.onEachFeature;
 
 		var tileSize = this.getTileSize();
 		var renderer = this.options.rendererFactory(coords, tileSize, this.options);
