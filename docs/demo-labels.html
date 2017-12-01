@@ -22,14 +22,21 @@
 		var vectorTileOptions = {
 			rendererFactory: L.canvas.tile,
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>',
-			onEachFeature: function(feature, featureLayer, vtLayer, tileCoords) {
-				if(vtLayer.name === 'place_label' && feature.properties.localrank > 60) {
-					var latlng = this.vtGeometryToLatLng(feature.geometry[0], vtLayer, tileCoords)
-					marker = new L.Marker(latlng);
-					marker.bindTooltip(feature.properties.name).openTooltip();
-					this.addUserLayer(marker, tileCoords);
-				}
-			},
+			onEachFeature: (function () {
+                var seen = {};
+                return function (feature, featureLayer, vtLayer, tileCoords) {
+                    var id = feature.id;
+                    if (!seen[id]) {
+                        if(vtLayer.name === 'place_label' && feature.properties.localrank > 60) {
+                            var latlng = this.vtGeometryToLatLng(feature.geometry[0], vtLayer, tileCoords)
+                            marker = new L.CircleMarker(latlng, {stroke: false, fill: false});
+                            marker.bindTooltip(feature.properties.name, {permanent: true}).openTooltip();
+                            this.addUserLayer(marker, tileCoords);
+                        }
+                        seen[id] = true;
+                    }
+                }
+            }()),
 			vectorTileLayerStyles: {
 
 				water: {
