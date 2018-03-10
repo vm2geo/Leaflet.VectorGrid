@@ -389,24 +389,30 @@ Styling is done via per-layer² sets of <code>L.Path</code> options in the <code
         // properties, the map&#39;s zoom level, and the layer's geometry
         // dimension (point, line, polygon)
         water: function(properties, zoom, geometryDimension) {
-            return [
-                {   // point
+	    if (geometryDimension === 1) {   // point
+	        return ({
                     radius: 5,
                     color: &#39;#cf52d3&#39;,
-                },
-                {   // line
+                });
+	    }
+	    
+	    if (geometryDimension === 2) {   // line
+                 return ({
                     weight: 1,
                     color: &#39;#cf52d3&#39;,
                     dashArray: &#39;2, 6&#39;,
                     fillOpacity: 0
-                },
-                {   // polygon
+                });
+	    }
+	    
+	    if (geometryDimension === 3) {   // polygon
+	         return ({
                     weight: 1,
                     fillColor: &#39;#9bc2c4&#39;,
                     fillOpacity: 1,
                     fill: true
-                }
-            ]
+                });
+	    }
         },
         // An &#39;icon&#39; option means that a L.Icon will be used
         place: {
