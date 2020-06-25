@@ -127,7 +127,7 @@ L.VectorGrid = L.GridLayer.extend({
 						var featureLayer = this._createLayer(feat, pxPerExtent);
 
 						if (onEachFeature) {
-							onEachFeature.call(this, feat, null, layer, coords);
+							onEachFeature.call(this, feat, featureLayer, layer, coords);
 						}
 	
 						for (var j = 0; j < styleOptions.length; j++) {
